@@ -1,6 +1,6 @@
 # Dimensional
 
-Dimensional defines a generic type `Matrix` that is parameterized by the type of element it hold.
+Dimensional defines a generic type `Matrix` that is parameterized by the type of element it holds.
 ```swift
 let myBoolMatrix: Matrix = [[true, false], [false, true]]
 let myStringMatrix: Matrix = [["hello", "hi", "howdy"], ["goodbye", "bye", "see ya"]]

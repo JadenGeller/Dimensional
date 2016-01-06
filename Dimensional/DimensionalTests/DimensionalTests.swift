@@ -81,4 +81,10 @@ class DimensionalTests: XCTestCase {
     func testMatrixMultiplication() {
         XCTAssertTrue([[0, -5], [-6, -7]] == [[1, 0, -2], [0, 3, -1]] * [[0, 3], [-2, -1], [0, 4]])
     }
+    
+    func testRowViewColumnViewInitialization() {
+        let a: Matrix = Matrix([[1, 2], [3, 4]] as RowView)
+        let b: Matrix = Matrix([[1, 3], [2, 4]] as ColumnView)
+        XCTAssertTrue(a == b)
+    }
 }

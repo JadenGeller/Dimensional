@@ -30,7 +30,7 @@ print(x) // -> [[1, 2, 3], [3, 4, 6], [5, 6, 9]]
 ```
 I want to reiterate how cool this is! The properties `rows` and `columns` provide collections that not only allow you to inspect a `Matrix`, but also allow you to modify it in really familiar ways. Its interface is nearly identical to that of `Array` since both conform to the same protocols.
 
-A `Matrix` can be initialized in many different ways.
+A `Matrix` can be initialized in many different novel ways.
 ```swift
 let a: Matrix = Matrix([[1, 2], [3, 4]] as RowView)
 let b: Matrix = Matrix([[1, 3], [2, 4]] as ColumnView)

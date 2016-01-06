@@ -28,6 +28,7 @@ x.rows.append([5, 6])
 x.columns.insert([3, 6, 9], atIndex: 2)
 print(x) // -> [[1, 2, 3], [3, 4, 6], [5, 6, 9]]
 ```
+I want to reiterate how cool this is! The properties `rows` and `columns` provide collections that not only allow you to inspect a `Matrix`, but also allow you to modify it in really familiar ways. Its interface is nearly identical to that of `Array` since both conform to the same protocols.
 
 A `Matrix` can be initialized in many different ways.
 ```swift

@@ -4,6 +4,9 @@ Dimensional defines a generic type `Matrix` that is parameterized by the type of
 ```swift
 let myBoolMatrix: Matrix = [[true, false], [false, true]]
 let myStringMatrix: Matrix = [["hello", "hi", "howdy"], ["goodbye", "bye", "see ya"]]
+
+print(myBoolMatrix.map{ $0 ? 1 : 0 }) // -> [[1, 0], [0, 1]]
+print(myStringMatrix.transpose) // -> [["hello", "goodbye"], ["hi", "bye"], ["howdy", "see ya"]]
 ```
 Note that matrices can be initialized from 2-dimensional array literals, and that each inner-array represents a row in the constructed `Matrix`.
 
@@ -16,6 +19,7 @@ print(a.determinant)      // -> -2
 print(a.dot(b) * (a + b)) // -> [[60, 120], [-20, 40]]
 print(a * b)              // -> [[-5, 10], [-5, 30]]
 ```
+Matrices composed of floating point types gain even more amazing powers, such as the ability to take an inverse!
 
 Not only does `Matrix` conform to `MutableCollectionType`, but it exposes two views `RowView` and `ColumnView` each of which conform to `RangeReplaceableCollectionType` allowing for complex manipulations.
 ```swift

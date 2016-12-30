@@ -37,7 +37,9 @@ extension UInt64 : NumericArithmeticType { }
 extension UInt   : NumericArithmeticType { }
 extension Float32 : FloatingPointArithmeticType { }
 extension Float64 : FloatingPointArithmeticType { }
-extension Float80 : FloatingPointArithmeticType { }
+#if arch(x86_64) || arch(i386)
+    extension Float80 : FloatingPointArithmeticType { }
+#endif
 
 public prefix func -<T: SignedNumericArithmeticType>(value: Matrix<T>) -> Matrix<T> {
     return value.map{-$0}

@@ -14,14 +14,14 @@ public struct ColumnView<Member> {
     }
 }
 
-extension ColumnView: ArrayLiteralConvertible {
+extension ColumnView: ExpressibleByArrayLiteral {
     public init() {
         self.matrix = Matrix()
     }
     
-    public init<S: SequenceType where S.Generator.Element == [Member]>(_ columns: S) {
+    public init<S: Sequence>(_ columns: S) where S.Iterator.Element == [Member] {
         self.init()
-        appendContentsOf(columns)
+        append(contentsOf: columns)
     }
     
     public init(arrayLiteral elements: [Member]...) {
@@ -39,19 +39,28 @@ extension ColumnView: CustomStringConvertible, CustomDebugStringConvertible {
     }
 }
 
-extension ColumnView: MutableCollectionType, RangeReplaceableCollectionType {
-    public mutating func replaceRange<C : CollectionType where C.Generator.Element == [Member]>(subRange: Range<Int>, with newElements: C) {
+extension ColumnView: MutableCollection, RangeReplaceableCollection {
+    /// Returns the position immediately after the given index.
+    ///
+    /// - Parameter i: A valid index of the collection. `i` must be less than
+    ///   `endIndex`.
+    /// - Returns: The index value immediately after `i`.
+    public func index(after i: Int) -> Int {
+        return i + 1
+    }
+
+    public mutating func replaceSubrange<C : Collection>(_ subRange: Range<Int>, with newElements: C) where C.Iterator.Element == [Member] {
         
         // Verify size
         let expectedCount = matrix.count > 0 ? matrix.rows.count : (newElements.first?.count ?? 0)
         newElements.forEach { column in
             precondition(column.count == expectedCount, "Incompatable vector size.")
         }
-        if matrix.count == 0 { matrix.rowBacking = Array(count: expectedCount, repeatedValue: Array()) }
+        if matrix.count == 0 { matrix.rowBacking = Array(repeating: Array(), count: expectedCount) }
         
         // Replace range
         matrix.rowBacking.indices.forEach { index in
-            matrix.rowBacking[index].replaceRange(subRange, with: newElements.map { column in
+            matrix.rowBacking[index].replaceSubrange(subRange, with: newElements.map { column in
                 column[index]
             })
         }
@@ -67,11 +76,11 @@ extension ColumnView: MutableCollectionType, RangeReplaceableCollectionType {
     
     public subscript(index: Int) -> [Member] {
         get {
-            return matrix.rows.indices.map{ i in matrix[row: i, column: index] }
+            return matrix.rows.indices.map{ i in matrix[i, index] }
         }
         set {
             precondition(newValue.count == matrix.rows.count, "Incompatible vector size.")
-            zip(matrix.rows.indices, newValue).forEach { (i, v) in matrix[row: i, column: index] = v }
+            zip(matrix.rows.indices, newValue).forEach { (i, v) in matrix[i, index] = v }
         }
     }
 }

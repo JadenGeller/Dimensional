@@ -10,7 +10,7 @@ public struct Matrix<Member> {
     internal var rowBacking: [[Member]]
 }
 
-extension Matrix: ArrayLiteralConvertible {
+extension Matrix: ExpressibleByArrayLiteral {
     public init() {
         self.rowBacking = []
     }
@@ -33,7 +33,7 @@ extension Matrix: ArrayLiteralConvertible {
 }
 
 extension Matrix {
-    public subscript(row row: Int, column column: Int) -> Member {
+    public subscript(row: Int, column: Int) -> Member {
         get {
             return rowBacking[row][column]
         }
@@ -61,7 +61,16 @@ extension Matrix {
     }
 }
 
-extension Matrix: CollectionType {
+extension Matrix: Collection {
+    /// Returns the position immediately after the given index.
+    ///
+    /// - Parameter i: A valid index of the collection. `i` must be less than
+    ///   `endIndex`.
+    /// - Returns: The index value immediately after `i`.
+    public func index(after i: Int) -> Int {
+        return i + 1
+    }
+
     public var startIndex: Int {
         return 0
     }
@@ -70,18 +79,18 @@ extension Matrix: CollectionType {
         return rows.count * columns.count
     }
     
-    public func positionWithIndex(index: Int) -> (row: Int, column: Int) {
+    public func positionWithIndex(_ index: Int) -> (row: Int, column: Int) {
         return (row: index / columns.count, column: index % columns.count)
     }
     
     public subscript(index: Int) -> Member {
         get {
             let position = positionWithIndex(index)
-            return self[row: position.row, column: position.column]
+            return self[position.row, position.column]
         }
         set {
             let position = positionWithIndex(index)
-            self[row: position.row, column: position.column] = newValue
+            self[position.row, position.column] = newValue
         }
     }
 }
@@ -101,19 +110,19 @@ public func ==<Member: Equatable>(lhs: Matrix<Member>, rhs: Matrix<Member>) -> B
 }
 
 extension Matrix {
-    public func map<T>(@noescape transform: Member throws -> T) rethrows -> Matrix<T> {
+    public func map<T>(transform: (Member) throws -> T) rethrows -> Matrix<T> {
         return Matrix<T>(RowView(try rows.map{ try $0.map(transform) }))
     }
     
-    public func map<T>(@noescape transform: (Member, row: Int, column: Int) throws -> T) rethrows -> Matrix<T> {
-        return Matrix<T>(RowView(try rows.enumerate().map{ (r, columns) in
-            try columns.enumerate().map{ (c, value) in
-                try transform(value, row: r, column: c)
+    public func map<T>(transform: @escaping (Member, _ row: Int, _ column: Int) throws -> T) rethrows -> Matrix<T> {
+        return Matrix<T>(RowView(try rows.enumerated().map{ (r, columns) in
+            try columns.enumerated().map{ (c, value) in
+                try transform(value, r, c)
             }
         }))
     }
     
-    public func zipWith<U, V>(matrix: Matrix<U>, transform: (Member, U) -> V) -> Matrix<V> {
+    public func zipWith<U, V>(_ matrix: Matrix<U>, transform: @escaping (Member, U) -> V) -> Matrix<V> {
         return Matrix<V>(RowView(zip(self.rows, matrix.rows).map{ zip($0, $1).map(transform) }))
     }
 }
@@ -128,20 +137,20 @@ extension Matrix {
     }
 }
 
-extension Matrix where Member: IntegerLiteralConvertible {
-    public static func diagonal(dimensions: MatrixDimensions, diagonalValue: Member, defaultValue: Member) -> Matrix {
+extension Matrix where Member: ExpressibleByIntegerLiteral {
+    public static func diagonal(_ dimensions: MatrixDimensions, diagonalValue: Member, defaultValue: Member) -> Matrix {
         var matrix = Matrix(dimensions: dimensions, repeatedValue: defaultValue)
-        for i in 0..<min(dimensions.width, dimensions.height) {
-            matrix[row: i, column: i] = diagonalValue
+        for i in 0..<Swift.min(dimensions.width, dimensions.height) {
+            matrix[i, i] = diagonalValue
         }
         return matrix
     }
     
-    public static func diagonal(dimensions: MatrixDimensions) -> Matrix {
+    public static func diagonal(_ dimensions: MatrixDimensions) -> Matrix {
         return diagonal(dimensions, diagonalValue: 1, defaultValue: 0)
     }
     
-    public static func identity(size size: Int) -> Matrix {
+    public static func identity(size: Int) -> Matrix {
         return diagonal((size, size))
     }
 }
@@ -150,8 +159,7 @@ public typealias MatrixDimensions = (width: Int, height: Int)
 
 extension Matrix {
     public init(dimensions: MatrixDimensions, repeatedValue: Member) {
-        self.rowBacking = Array(count: dimensions.height, repeatedValue:
-            Array(count: dimensions.width, repeatedValue: repeatedValue)
+        self.rowBacking = Array(repeating: Array(repeating: repeatedValue, count: dimensions.width), count: dimensions.height
         )
     }
     

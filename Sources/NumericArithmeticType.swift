@@ -6,20 +6,20 @@
 //  Copyright © 2016 Jaden Geller. All rights reserved.
 //
 
-public protocol NumericArithmeticType: IntegerLiteralConvertible {
-    func +(lhs: Self, rhs: Self) -> Self
-    func -(lhs: Self, rhs: Self) -> Self
-    func *(lhs: Self, rhs: Self) -> Self
-    func /(lhs: Self, rhs: Self) -> Self
+public protocol NumericArithmeticType: ExpressibleByIntegerLiteral {
+    static func +(lhs: Self, rhs: Self) -> Self
+    static func -(lhs: Self, rhs: Self) -> Self
+    static func *(lhs: Self, rhs: Self) -> Self
+    static func /(lhs: Self, rhs: Self) -> Self
     
-    func +=(inout lhs: Self, rhs: Self)
-    func -=(inout lhs: Self, rhs: Self)
-    func *=(inout lhs: Self, rhs: Self)
-    func /=(inout lhs: Self, rhs: Self)
+    static func +=(lhs: inout Self, rhs: Self)
+    static func -=(lhs: inout Self, rhs: Self)
+    static func *=(lhs: inout Self, rhs: Self)
+    static func /=(lhs: inout Self, rhs: Self)
 }
 
 public protocol SignedNumericArithmeticType: NumericArithmeticType {
-    prefix func -(value: Self) -> Self
+    prefix static func -(value: Self) -> Self
 }
 
 public protocol FloatingPointArithmeticType: SignedNumericArithmeticType { }
@@ -39,7 +39,7 @@ extension Float64 : FloatingPointArithmeticType { }
 extension Float80 : FloatingPointArithmeticType { }
 
 public prefix func -<T: SignedNumericArithmeticType>(value: Matrix<T>) -> Matrix<T> {
-    return value.map(-)
+    return value.map{-$0}
 }
 
 public func *<T: NumericArithmeticType>(lhs: T, rhs: Matrix<T>) -> Matrix<T> {
@@ -61,9 +61,9 @@ public func -<T: NumericArithmeticType>(lhs: Matrix<T>, rhs: Matrix<T>) -> Matri
 }
 
 extension Matrix where Member: NumericArithmeticType {
-    public func dot(other: Matrix<Member>) -> Member {
+    public func dot(_ other: Matrix<Member>) -> Member {
         precondition(dimensions == other.dimensions, "Cannot take the dot product of matrices of different dimensions.")
-        return zipWith(other, transform: *).reduce(0, combine: +)
+        return zipWith(other, transform: *).reduce(0, +)
     }
 }
 
@@ -72,17 +72,17 @@ extension Matrix where Member: SignedNumericArithmeticType {
         precondition(isSquare, "Cannot find the determinant of a non-square matrix.")
         precondition(!isEmpty, "Cannot find the determinant of an empty matrix.")
     
-        guard count != 1 else { return self[row: 0, column: 0] } // Base case
+        guard count != 1 else { return self[0, 0] } // Base case
 
         // Recursive case
         var sum: Member = 0
         var polarity: Member = 1
         
         let topRow = rows[0]
-        for (column, value) in topRow.enumerate() {
+        for (column, value) in topRow.enumerated() {
             var subMatrix = self
             subMatrix.rows.removeFirst()
-            subMatrix.columns.removeAtIndex(column)
+            subMatrix.columns.remove(at: column)
             sum += polarity * value * subMatrix.determinant
             
             polarity *= -1
@@ -94,8 +94,8 @@ extension Matrix where Member: SignedNumericArithmeticType {
     public var cofactor: Matrix {
         return map { (value, row, column) in
             var subMatrix = self
-            subMatrix.rows.removeAtIndex(row)
-            subMatrix.columns.removeAtIndex(column)
+            subMatrix.rows.remove(at: row)
+            subMatrix.columns.remove(at: column)
             let polarity: Member = ((row + column) % 2 == 0 ? 1 : -1)
             return subMatrix.determinant * polarity
         }
@@ -113,8 +113,8 @@ extension Matrix where Member: FloatingPointArithmeticType {
 }
 
 extension Matrix where Member: NumericArithmeticType {
-    public func transformVector(vector: [Member]) -> [Member] {
-        return rows.map{ row in zip(row, vector).map(*).reduce(0, combine: +) }
+    public func transformVector(_ vector: [Member]) -> [Member] {
+        return rows.map{ row in zip(row, vector).map(*).reduce(0, +) }
     }
 }
 

@@ -13,8 +13,8 @@ class DimensionalTests: XCTestCase {
     
     func testRowsColumns() {
         let matrix: Matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-        XCTAssertEqual([[1, 2, 3], [4, 5, 6], [7, 8, 9]], Array(matrix.rows))
-        XCTAssertEqual([[1, 4, 7], [2, 5, 8], [3, 6, 9]], Array(matrix.columns))
+        XCTAssertEqual([[1, 2, 3], [4, 5, 6], [7, 8, 9]].flatMap{ $0 }, Array(matrix.rows).flatMap{ $0 })
+        XCTAssertEqual([[1, 4, 7], [2, 5, 8], [3, 6, 9]].flatMap{ $0 }, Array(matrix.columns).flatMap{ $0 })
     }
     
     func testAppending() {
@@ -25,7 +25,7 @@ class DimensionalTests: XCTestCase {
         XCTAssertTrue([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]] == matrix)
         matrix.columns.removeFirst(2)
         XCTAssertTrue([[3], [6], [9], [12]] == matrix)
-        matrix.columns.appendContentsOf([[0, 0, 0, 0], [1, 2, 3, 4]])
+        matrix.columns.append(contentsOf: [[0, 0, 0, 0], [1, 2, 3, 4]])
         XCTAssertTrue([[3, 0, 1], [6, 0, 2], [9, 0, 3], [12, 0, 4]] == matrix)
         matrix.columns.removeAll()
         XCTAssertTrue(matrix.rows.count == 0)
@@ -33,10 +33,10 @@ class DimensionalTests: XCTestCase {
         matrix.columns.append([7])
         XCTAssertTrue(matrix == [[1, 2, 3, 4, 5, 6, 7]])
         matrix.rows.removeAll()
-        matrix.columns.appendContentsOf([[1, 2, 3], [4, 5, 6]])
+        matrix.columns.append(contentsOf: [[1, 2, 3], [4, 5, 6]])
         XCTAssertTrue(matrix == [[1, 4], [2, 5], [3, 6]])
-        matrix.rows.insert([11, 12], atIndex: 2)
-        matrix.columns.insert([0, -1, -2, -3], atIndex: 1)
+        matrix.rows.insert([11, 12], at: 2)
+        matrix.columns.insert([0, -1, -2, -3], at: 1)
         XCTAssertTrue(matrix == [[1, 0, 4], [2, -1, 5], [11, -2, 12], [3, -3, 6]])
     }
     

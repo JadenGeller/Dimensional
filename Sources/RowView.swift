@@ -14,14 +14,14 @@ public struct RowView<Member> {
     }
 }
 
-extension RowView: ArrayLiteralConvertible {
+extension RowView: ExpressibleByArrayLiteral {
     public init() {
         self.matrix = Matrix()
     }
     
-    public init<S: SequenceType where S.Generator.Element == [Member]>(_ rows: S) {
+    public init<S: Sequence>(_ rows: S) where S.Iterator.Element == [Member] {
         self.init()
-        appendContentsOf(rows)
+        append(contentsOf: rows)
     }
     
     public init(arrayLiteral elements: [Member]...) {
@@ -39,13 +39,22 @@ extension RowView: CustomStringConvertible, CustomDebugStringConvertible {
     }
 }
 
-extension RowView: MutableCollectionType, RangeReplaceableCollectionType {
-    public mutating func replaceRange<C : CollectionType where C.Generator.Element == [Member]>(subRange: Range<Int>, with newElements: C) {
+extension RowView: MutableCollection, RangeReplaceableCollection {
+    /// Returns the position immediately after the given index.
+    ///
+    /// - Parameter i: A valid index of the collection. `i` must be less than
+    ///   `endIndex`.
+    /// - Returns: The index value immediately after `i`.
+    public func index(after i: Int) -> Int {
+        return  i+1
+    }
+
+    public mutating func replaceSubrange<C : Collection>(_ subRange: Range<Int>, with newElements: C) where C.Iterator.Element == [Member] {
         let expectedCount = matrix.count > 0 ? matrix.columns.count : (newElements.first?.count ?? 0)
         newElements.forEach{ row in
             precondition(row.count == expectedCount, "Incompatable vector size.")
         }
-        matrix.rowBacking.replaceRange(subRange, with: newElements)
+        matrix.rowBacking.replaceSubrange(subRange, with: newElements)
     }
     
     public var startIndex: Int {

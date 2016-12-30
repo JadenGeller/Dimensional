@@ -40,15 +40,6 @@ extension RowView: CustomStringConvertible, CustomDebugStringConvertible {
 }
 
 extension RowView: MutableCollection, RangeReplaceableCollection {
-    /// Returns the position immediately after the given index.
-    ///
-    /// - Parameter i: A valid index of the collection. `i` must be less than
-    ///   `endIndex`.
-    /// - Returns: The index value immediately after `i`.
-    public func index(after i: Int) -> Int {
-        return  i+1
-    }
-
     public mutating func replaceSubrange<C : Collection>(_ subRange: Range<Int>, with newElements: C) where C.Iterator.Element == [Member] {
         let expectedCount = matrix.count > 0 ? matrix.columns.count : (newElements.first?.count ?? 0)
         newElements.forEach{ row in
@@ -65,6 +56,10 @@ extension RowView: MutableCollection, RangeReplaceableCollection {
         return matrix.rowBacking.count
     }
     
+    public func index(after i: Int) -> Int {
+        return i + 1
+    }
+
     public subscript(index: Int) -> [Member] {
         get {
             return matrix.rowBacking[index]

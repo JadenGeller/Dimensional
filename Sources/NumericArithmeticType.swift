@@ -4,6 +4,7 @@
 //
 //  Created by Jaden Geller on 1/6/16.
 //  Copyright © 2016 Jaden Geller. All rights reserved.
+//  Modified by John Howell on 12/30/2016. - Added scalar addition and subtraction.
 //
 
 public protocol NumericArithmeticType: ExpressibleByIntegerLiteral {
@@ -49,6 +50,23 @@ public func *<T: NumericArithmeticType>(lhs: T, rhs: Matrix<T>) -> Matrix<T> {
 public func *<T: NumericArithmeticType>(lhs: Matrix<T>, rhs: T) -> Matrix<T> {
     return lhs.map { rhs * $0 }
 }
+
+public func +<T: NumericArithmeticType>(lhs: T, rhs: Matrix<T>) -> Matrix<T> {
+    return rhs.map { lhs + $0 }
+}
+
+public func +<T: NumericArithmeticType>(lhs: Matrix<T>, rhs: T) -> Matrix<T> {
+    return lhs.map { rhs + $0 }
+}
+
+public func -<T: NumericArithmeticType>(lhs: T, rhs: Matrix<T>) -> Matrix<T> {
+    return rhs.map { lhs - $0 }
+}
+
+public func -<T: NumericArithmeticType>(lhs: Matrix<T>, rhs: T) -> Matrix<T> {
+    return lhs.map { $0 - rhs}
+}
+
 
 public func +<T: NumericArithmeticType>(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> {
     precondition(lhs.dimensions == rhs.dimensions, "Cannot add matrices of different dimensions.")

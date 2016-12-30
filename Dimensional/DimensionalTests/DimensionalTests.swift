@@ -52,13 +52,17 @@ class DimensionalTests: XCTestCase {
     }
     
     func testRepeatedValue() {
-        XCTAssertTrue([[1, 1, 1], [1, 1, 1]] == Matrix(dimensions: (3, 2), repeatedValue: 1))
+        XCTAssertTrue([[1, 1, 1], [1, 1, 1]] == Matrix(repeating: 1, dimensions: (3, 2)))
         XCTAssertTrue([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]] == Matrix.identity(size: 4))
     }
     
     func testArithmetic() {
         let a: Matrix = [[1, 2], [3, 4], [5, 6]]
         XCTAssertTrue(-a == a - (2 * a))
+        XCTAssertTrue(a - 1 == [[0, 1], [2,3], [4,5]])
+        XCTAssertTrue(1 - a == [[0, -1], [-2,-3], [-4,-5]])
+        XCTAssertTrue(1 + a == [[2, 3], [4,5], [6,7]])
+        XCTAssertTrue(a + 1 == [[2, 3], [4,5], [6,7]])
     }
     
     func testDot() {
@@ -87,4 +91,5 @@ class DimensionalTests: XCTestCase {
         let b: Matrix = Matrix([[1, 3], [2, 4]] as ColumnView)
         XCTAssertTrue(a == b)
     }
+
 }

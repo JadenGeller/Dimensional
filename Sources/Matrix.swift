@@ -62,15 +62,6 @@ extension Matrix {
 }
 
 extension Matrix: Collection {
-    /// Returns the position immediately after the given index.
-    ///
-    /// - Parameter i: A valid index of the collection. `i` must be less than
-    ///   `endIndex`.
-    /// - Returns: The index value immediately after `i`.
-    public func index(after i: Int) -> Int {
-        return i + 1
-    }
-
     public var startIndex: Int {
         return 0
     }
@@ -78,6 +69,11 @@ extension Matrix: Collection {
     public var endIndex: Int {
         return rows.count * columns.count
     }
+    
+    public func index(after i: Int) -> Int {
+        return i + 1
+    }
+    
     
     public func positionWithIndex(_ index: Int) -> (row: Int, column: Int) {
         return (row: index / columns.count, column: index % columns.count)
@@ -139,8 +135,8 @@ extension Matrix {
 
 extension Matrix where Member: ExpressibleByIntegerLiteral {
     public static func diagonal(_ dimensions: MatrixDimensions, diagonalValue: Member, defaultValue: Member) -> Matrix {
-        var matrix = Matrix(dimensions: dimensions, repeatedValue: defaultValue)
-        for i in 0..<Swift.min(dimensions.width, dimensions.height) {
+        var matrix = Matrix(repeating: defaultValue, dimensions: dimensions)
+        for i in 0..<Swift.min(dimensions.width, dimensions.height) { //Specify Swift. due to compiler bug that doesn't recognize min(Int, Int) if the type conforms to Collection
             matrix[i, i] = diagonalValue
         }
         return matrix
@@ -158,8 +154,8 @@ extension Matrix where Member: ExpressibleByIntegerLiteral {
 public typealias MatrixDimensions = (width: Int, height: Int)
 
 extension Matrix {
-    public init(dimensions: MatrixDimensions, repeatedValue: Member) {
-        self.rowBacking = Array(repeating: Array(repeating: repeatedValue, count: dimensions.width), count: dimensions.height
+    public init(repeating: Member, dimensions: MatrixDimensions) {
+        self.rowBacking = Array(repeating: Array(repeating: repeating, count: dimensions.width), count: dimensions.height
         )
     }
     

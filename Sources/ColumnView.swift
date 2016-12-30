@@ -40,15 +40,7 @@ extension ColumnView: CustomStringConvertible, CustomDebugStringConvertible {
 }
 
 extension ColumnView: MutableCollection, RangeReplaceableCollection {
-    /// Returns the position immediately after the given index.
-    ///
-    /// - Parameter i: A valid index of the collection. `i` must be less than
-    ///   `endIndex`.
-    /// - Returns: The index value immediately after `i`.
-    public func index(after i: Int) -> Int {
-        return i + 1
-    }
-
+    
     public mutating func replaceSubrange<C : Collection>(_ subRange: Range<Int>, with newElements: C) where C.Iterator.Element == [Member] {
         
         // Verify size
@@ -74,6 +66,10 @@ extension ColumnView: MutableCollection, RangeReplaceableCollection {
         return matrix.rowBacking.first?.count ?? 0
     }
     
+    public func index(after i: Int) -> Int {
+        return i + 1
+    }
+
     public subscript(index: Int) -> [Member] {
         get {
             return matrix.rows.indices.map{ i in matrix[i, index] }

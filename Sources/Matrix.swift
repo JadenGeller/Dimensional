@@ -30,6 +30,7 @@ extension Matrix: ExpressibleByArrayLiteral {
     public init(_ columns: ColumnView<Member>) {
         self.rowBacking = columns.matrix.rowBacking
     }
+    
 }
 
 extension Matrix {
@@ -131,6 +132,16 @@ extension Matrix {
     public var transpose: Matrix {
         return Matrix(RowView(columns))
     }
+    
+}
+
+extension Matrix where Member: Equatable {
+    public var isSymmetric: Bool {
+        guard isSquare else { return false}
+        return transpose == self
+        
+    }
+
 }
 
 extension Matrix where Member: ExpressibleByIntegerLiteral {

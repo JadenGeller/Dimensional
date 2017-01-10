@@ -91,5 +91,18 @@ class DimensionalTests: XCTestCase {
         let b: Matrix = Matrix([[1, 3], [2, 4]] as ColumnView)
         XCTAssertTrue(a == b)
     }
+    
+    func testCholeskyDecomposition() {
+        let test = Matrix<Double>([[1,5,9,13],
+                                   [0,6,10,14],
+                                   [0,0,11,15],
+                                   [0,0,0,16]])
+        let testMatrix = test.transpose * test
+        XCTAssertTrue(test == testMatrix.cholesky)
+        
+        
+        
+
+    }
 
 }

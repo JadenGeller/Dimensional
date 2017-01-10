@@ -23,7 +23,7 @@ public protocol SignedNumericArithmeticType: NumericArithmeticType {
     prefix static func -(value: Self) -> Self
 }
 
-public protocol FloatingPointArithmeticType: SignedNumericArithmeticType { }
+public protocol FloatingPointArithmeticType: SignedNumericArithmeticType, Equatable, FloatingPoint { }
 
 extension Int8   : SignedNumericArithmeticType { }
 extension Int16  : SignedNumericArithmeticType { }
@@ -67,6 +67,10 @@ public func -<T: NumericArithmeticType>(lhs: T, rhs: Matrix<T>) -> Matrix<T> {
 
 public func -<T: NumericArithmeticType>(lhs: Matrix<T>, rhs: T) -> Matrix<T> {
     return lhs.map { $0 - rhs}
+}
+
+public func /<T: NumericArithmeticType>(lhs: Matrix<T>, rhs: T) -> Matrix<T> {
+    return lhs.map { $0 / rhs}
 }
 
 
@@ -123,6 +127,43 @@ extension Matrix where Member: SignedNumericArithmeticType {
     
     public var adjoint: Matrix {
         return cofactor.transpose
+    }
+}
+
+extension Matrix where Member: FloatingPointArithmeticType {
+    public var cholesky:Matrix {
+        /* Ported from LAPACK Fortran Code http://www.netlib.org/lapack/double/dpotrf.f */
+        precondition(!isEmpty, "Cannot find the cholesky of an empty matrix.")
+        precondition(self.isSquare, "Cannot find the cholesky of a non-square matrix.") //Matrix must be square
+        precondition(self.isSymmetric, "Cannot find the cholesky of a nonsymmetric matrix.")
+        
+        
+        let n = rows.count
+        
+        
+        var temp: Matrix = Matrix(repeating: 0, dimensions: (n, n))
+        for i in 0..<n {
+            for j in i..<n {
+                temp[i,j] = self[i,j]
+            }
+        }
+        
+        temp[0,0] = temp[0,0].squareRoot()
+        for j in 1..<n {
+            temp[0,j] = temp[0,j]/temp[0,0]
+        }
+        
+        for j in 1..<n {
+            temp[j,j] -= (0..<j).map{temp[$0, j] * temp[$0, j]}.reduce(0, +) //Dot Product
+            temp[j,j].formSquareRoot()
+
+            for loop1 in (j+1)..<n {
+                temp[j, loop1] += (0..<j).map{ -1 * temp[$0, j] * temp[$0, loop1]}.reduce(0, +) // y = -A'x + y
+                temp[j, loop1] = temp[j,loop1]/temp[j,j]
+            }
+        }
+        
+        return temp
     }
 }
 

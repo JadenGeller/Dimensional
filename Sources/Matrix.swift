@@ -153,6 +153,25 @@ extension Matrix where Member: ExpressibleByIntegerLiteral {
         return matrix
     }
     
+    public static func diagonalfromVector(_ vector: Matrix) -> Matrix {
+        precondition(vector.rows.count == 1 || vector.columns.count == 1, "Argument must be a vector.")
+        let dimension = Swift.max(vector.rows.count, vector.columns.count)
+        var matrix = Matrix(repeating: 0, dimensions: (dimension, dimension))
+        if vector.rows.count == dimension {
+            //loop over rows
+            for i in 0..<vector.rows.count {
+                matrix[i,i] = vector.rows[i][1]
+            }
+        } else {
+            //loop over columns
+            for i in 0..<vector.columns.count {
+                matrix[i,i] = vector.columns[i][1]
+            }
+        }
+        
+        return matrix
+    }
+    
     public static func diagonal(_ dimensions: MatrixDimensions) -> Matrix {
         return diagonal(dimensions, diagonalValue: 1, defaultValue: 0)
     }

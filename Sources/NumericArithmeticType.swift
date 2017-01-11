@@ -19,6 +19,7 @@ public protocol NumericArithmeticType: ExpressibleByIntegerLiteral {
     static func /=(lhs: inout Self, rhs: Self)
 }
 
+
 public protocol SignedNumericArithmeticType: NumericArithmeticType {
     prefix static func -(value: Self) -> Self
 }
@@ -73,7 +74,6 @@ public func /<T: NumericArithmeticType>(lhs: Matrix<T>, rhs: T) -> Matrix<T> {
     return lhs.map { $0 / rhs}
 }
 
-
 public func +<T: NumericArithmeticType>(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> {
     precondition(lhs.dimensions == rhs.dimensions, "Cannot add matrices of different dimensions.")
     return lhs.zipWith(rhs, transform: +)
@@ -83,6 +83,19 @@ public func -<T: NumericArithmeticType>(lhs: Matrix<T>, rhs: Matrix<T>) -> Matri
     precondition(lhs.dimensions == rhs.dimensions, "Cannot subract matrices of different dimensions.")
     return lhs.zipWith(rhs, transform: -)
 }
+
+public func +=<T: NumericArithmeticType>(lhs: inout Matrix<T>, rhs: Matrix<T>) {
+    lhs =  lhs + rhs
+}
+
+public func -=<T: NumericArithmeticType>(lhs: inout Matrix<T>, rhs: Matrix<T>) {
+    lhs =  lhs - rhs
+}
+
+public func *=<T: NumericArithmeticType>(lhs: inout Matrix<T>, rhs: Matrix<T>) {
+    lhs =  lhs * rhs
+}
+
 
 extension Matrix where Member: NumericArithmeticType {
     public func dot(_ other: Matrix<Member>) -> Member {

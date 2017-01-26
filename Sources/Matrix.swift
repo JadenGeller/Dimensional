@@ -153,12 +153,10 @@ extension Matrix where Member: ExpressibleByIntegerLiteral {
         return matrix
     }
     
-    public static func diagonalFromVector(_ vector: Matrix) -> Matrix {
-        precondition(vector.rows.count == 1 || vector.columns.count == 1, "Argument must be a vector.")
-        let elements = vector.flatMap { $0 }
-        var matrix = Matrix(repeating: 0, dimensions: (elements.count, elements.count))
-        for i in 0..<elements.count {
-            matrix[i,i] = elements[i]
+    public static func diagonalFromVector(_ vector: Array<Member>) -> Matrix {
+        var matrix = Matrix(repeating: 0, dimensions: (vector.count, vector.count))
+        for i in 0..<vector.count {
+            matrix[i,i] = vector[i]
         }
         
         return matrix

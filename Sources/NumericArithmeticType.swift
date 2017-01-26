@@ -96,6 +96,25 @@ public func *=<T: NumericArithmeticType>(lhs: inout Matrix<T>, rhs: Matrix<T>) {
     lhs =  lhs * rhs
 }
 
+public func *<T: FloatingPointArithmeticType>(lhs: Array<T>, rhs: Matrix<T>) -> Array<T> {
+    precondition(lhs.count == rhs.rows.count, "Matrix and Vector dimensions are not compatible")
+    var result = Array<T>()
+    for column in rhs.columns {
+        result.append(lhs.dot(column))
+    }
+    return result
+}
+
+public func *<T: FloatingPointArithmeticType>(lhs: Matrix<T>, rhs: Array<T>) -> Array<T> {
+    precondition(rhs.count == lhs.columns.count, "Matrix and Vector dimensions are not compatible")
+    var result = Array<T>()
+    for row in lhs.rows {
+        result.append(rhs.dot(row))
+    }
+    return result
+}
+
+
 
 extension Matrix where Member: NumericArithmeticType {
     public func dot(_ other: Matrix<Member>) -> Member {

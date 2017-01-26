@@ -18,6 +18,8 @@
 		6B4D55031E15F60C00BF47C3 /* ColumnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8157BF1C3CCF3B00228F7B /* ColumnView.swift */; };
 		6B4D55041E15F61000BF47C3 /* RowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB2D5791C3D3CA1005AA39B /* RowView.swift */; };
 		6B4D55051E15F61300BF47C3 /* NumericArithmeticType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8157C51C3D181A00228F7B /* NumericArithmeticType.swift */; };
+		6BED3EA21E39783200D396CF /* Vector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BED3EA11E39783200D396CF /* Vector.swift */; };
+		6BED3EA31E39783200D396CF /* Vector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BED3EA11E39783200D396CF /* Vector.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +45,7 @@
 		6B4D54FA1E15F0E900BF47C3 /* DimensionaliOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DimensionaliOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B4D54FC1E15F0E900BF47C3 /* DimensionaliOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DimensionaliOS.h; sourceTree = "<group>"; };
 		6B4D54FD1E15F0E900BF47C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6BED3EA11E39783200D396CF /* Vector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vector.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +77,7 @@
 		4D59D5341C3C757D00058827 = {
 			isa = PBXGroup;
 			children = (
+				6BED3EA11E39783200D396CF /* Vector.swift */,
 				4D59D5581C3C75A100058827 /* Matrix.swift */,
 				4D8157BF1C3CCF3B00228F7B /* ColumnView.swift */,
 				4DB2D5791C3D3CA1005AA39B /* RowView.swift */,
@@ -271,6 +275,7 @@
 			files = (
 				4D8157C01C3CCF3B00228F7B /* ColumnView.swift in Sources */,
 				4DB2D57A1C3D3CA1005AA39B /* RowView.swift in Sources */,
+				6BED3EA21E39783200D396CF /* Vector.swift in Sources */,
 				4D8157C61C3D181A00228F7B /* NumericArithmeticType.swift in Sources */,
 				4D59D5591C3C75A100058827 /* Matrix.swift in Sources */,
 			);
@@ -290,6 +295,7 @@
 			files = (
 				6B4D55031E15F60C00BF47C3 /* ColumnView.swift in Sources */,
 				6B4D55051E15F61300BF47C3 /* NumericArithmeticType.swift in Sources */,
+				6BED3EA31E39783200D396CF /* Vector.swift in Sources */,
 				6B4D55041E15F61000BF47C3 /* RowView.swift in Sources */,
 				6B4D55021E15F60900BF47C3 /* Matrix.swift in Sources */,
 			);

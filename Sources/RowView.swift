@@ -4,6 +4,7 @@
 //
 //  Created by Jaden Geller on 1/5/16.
 //  Copyright © 2016 Jaden Geller. All rights reserved.
+//  Modified by Vladislav Lisyanskiy on 9/10/2017. - Converted to Swift 4.
 //
 
 public struct RowView<Member> {
@@ -42,7 +43,7 @@ extension RowView: CustomStringConvertible, CustomDebugStringConvertible {
 extension RowView: MutableCollection, RangeReplaceableCollection {
     public mutating func replaceSubrange<C : Collection>(_ subRange: Range<Int>, with newElements: C) where C.Iterator.Element == [Member] {
         let expectedCount = matrix.count > 0 ? matrix.columns.count : (newElements.first?.count ?? 0)
-        newElements.forEach{ row in
+        newElements.forEach { row in
             precondition(row.count == expectedCount, "Incompatable vector size.")
         }
         matrix.rowBacking.replaceSubrange(subRange, with: newElements)
@@ -70,4 +71,3 @@ extension RowView: MutableCollection, RangeReplaceableCollection {
         }
     }
 }
-

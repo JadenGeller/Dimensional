@@ -4,11 +4,12 @@
 //
 //  Created by John Howell on 1/24/17.
 //  Copyright © 2017 John Howell. All rights reserved.
+//  Modified by Vladislav Lisyanskiy on 9/10/2017. - Converted to Swift 4.
 //
 
 import Foundation
 
-extension Array where Element: FloatingPointArithmeticType {
+extension Array where Element: FloatingPointArithmetic {
     public func dot(_ vector: [Element]) -> Element {
         precondition(self.count == vector.count, "Vectors are not the same length")
         return zip(self, vector).map { $0.0 * $0.1 }.reduce(Element(0), +)

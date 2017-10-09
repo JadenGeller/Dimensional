@@ -5,9 +5,10 @@
 //  Created by Jaden Geller on 1/6/16.
 //  Copyright © 2016 Jaden Geller. All rights reserved.
 //  Modified by John Howell on 12/30/2016. - Added scalar addition and subtraction.
+//  Modified by Vladislav Lisyanskiy on 9/10/2017. - Converted to Swift 4.
 //
 
-public protocol NumericArithmeticType: ExpressibleByIntegerLiteral {
+public protocol NumericArithmetic: ExpressibleByIntegerLiteral {
     static func +(lhs: Self, rhs: Self) -> Self
     static func -(lhs: Self, rhs: Self) -> Self
     static func *(lhs: Self, rhs: Self) -> Self
@@ -20,83 +21,83 @@ public protocol NumericArithmeticType: ExpressibleByIntegerLiteral {
 }
 
 
-public protocol SignedNumericArithmeticType: NumericArithmeticType {
+public protocol SignedNumericArithmetic: NumericArithmetic {
     prefix static func -(value: Self) -> Self
 }
 
-public protocol FloatingPointArithmeticType: SignedNumericArithmeticType, Equatable, FloatingPoint { }
+public protocol FloatingPointArithmetic: SignedNumericArithmetic, FloatingPoint { }
 
-extension Int8   : SignedNumericArithmeticType { }
-extension Int16  : SignedNumericArithmeticType { }
-extension Int32  : SignedNumericArithmeticType { }
-extension Int64  : SignedNumericArithmeticType { }
-extension Int    : SignedNumericArithmeticType { }
-extension UInt8  : NumericArithmeticType { }
-extension UInt16 : NumericArithmeticType { }
-extension UInt32 : NumericArithmeticType { }
-extension UInt64 : NumericArithmeticType { }
-extension UInt   : NumericArithmeticType { }
-extension Float32 : FloatingPointArithmeticType { }
-extension Float64 : FloatingPointArithmeticType { }
+extension Int8   : SignedNumericArithmetic { }
+extension Int16  : SignedNumericArithmetic { }
+extension Int32  : SignedNumericArithmetic { }
+extension Int64  : SignedNumericArithmetic { }
+extension Int    : SignedNumericArithmetic { }
+extension UInt8  : NumericArithmetic { }
+extension UInt16 : NumericArithmetic { }
+extension UInt32 : NumericArithmetic { }
+extension UInt64 : NumericArithmetic { }
+extension UInt   : NumericArithmetic { }
+extension Float32 : FloatingPointArithmetic { }
+extension Float64 : FloatingPointArithmetic { }
 #if arch(x86_64) || arch(i386)
-    extension Float80 : FloatingPointArithmeticType { }
+    extension Float80 : FloatingPointArithmetic { }
 #endif
 
-public prefix func -<T: SignedNumericArithmeticType>(value: Matrix<T>) -> Matrix<T> {
-    return value.map{-$0}
+public prefix func -<T: SignedNumericArithmetic>(value: Matrix<T>) -> Matrix<T> {
+    return value.map {-$0}
 }
 
-public func *<T: NumericArithmeticType>(lhs: T, rhs: Matrix<T>) -> Matrix<T> {
+public func *<T: NumericArithmetic>(lhs: T, rhs: Matrix<T>) -> Matrix<T> {
     return rhs.map { lhs * $0 }
 }
 
-public func *<T: NumericArithmeticType>(lhs: Matrix<T>, rhs: T) -> Matrix<T> {
+public func *<T: NumericArithmetic>(lhs: Matrix<T>, rhs: T) -> Matrix<T> {
     return lhs.map { rhs * $0 }
 }
 
-public func +<T: NumericArithmeticType>(lhs: T, rhs: Matrix<T>) -> Matrix<T> {
+public func +<T: NumericArithmetic>(lhs: T, rhs: Matrix<T>) -> Matrix<T> {
     return rhs.map { lhs + $0 }
 }
 
-public func +<T: NumericArithmeticType>(lhs: Matrix<T>, rhs: T) -> Matrix<T> {
+public func +<T: NumericArithmetic>(lhs: Matrix<T>, rhs: T) -> Matrix<T> {
     return lhs.map { rhs + $0 }
 }
 
-public func -<T: NumericArithmeticType>(lhs: T, rhs: Matrix<T>) -> Matrix<T> {
+public func -<T: NumericArithmetic>(lhs: T, rhs: Matrix<T>) -> Matrix<T> {
     return rhs.map { lhs - $0 }
 }
 
-public func -<T: NumericArithmeticType>(lhs: Matrix<T>, rhs: T) -> Matrix<T> {
+public func -<T: NumericArithmetic>(lhs: Matrix<T>, rhs: T) -> Matrix<T> {
     return lhs.map { $0 - rhs}
 }
 
-public func /<T: NumericArithmeticType>(lhs: Matrix<T>, rhs: T) -> Matrix<T> {
+public func /<T: NumericArithmetic>(lhs: Matrix<T>, rhs: T) -> Matrix<T> {
     return lhs.map { $0 / rhs}
 }
 
-public func +<T: NumericArithmeticType>(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> {
+public func +<T: NumericArithmetic>(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> {
     precondition(lhs.dimensions == rhs.dimensions, "Cannot add matrices of different dimensions.")
     return lhs.zipWith(rhs, transform: +)
 }
 
-public func -<T: NumericArithmeticType>(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> {
+public func -<T: NumericArithmetic>(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> {
     precondition(lhs.dimensions == rhs.dimensions, "Cannot subract matrices of different dimensions.")
     return lhs.zipWith(rhs, transform: -)
 }
 
-public func +=<T: NumericArithmeticType>(lhs: inout Matrix<T>, rhs: Matrix<T>) {
+public func +=<T: NumericArithmetic>(lhs: inout Matrix<T>, rhs: Matrix<T>) {
     lhs =  lhs + rhs
 }
 
-public func -=<T: NumericArithmeticType>(lhs: inout Matrix<T>, rhs: Matrix<T>) {
+public func -=<T: NumericArithmetic>(lhs: inout Matrix<T>, rhs: Matrix<T>) {
     lhs =  lhs - rhs
 }
 
-public func *=<T: NumericArithmeticType>(lhs: inout Matrix<T>, rhs: Matrix<T>) {
+public func *=<T: NumericArithmetic>(lhs: inout Matrix<T>, rhs: Matrix<T>) {
     lhs =  lhs * rhs
 }
 
-public func *<T: FloatingPointArithmeticType>(lhs: Array<T>, rhs: Matrix<T>) -> Array<T> {
+public func *<T: FloatingPointArithmetic>(lhs: Array<T>, rhs: Matrix<T>) -> Array<T> {
     precondition(lhs.count == rhs.rows.count, "Matrix and Vector dimensions are not compatible")
     var result = Array<T>()
     for column in rhs.columns {
@@ -105,7 +106,7 @@ public func *<T: FloatingPointArithmeticType>(lhs: Array<T>, rhs: Matrix<T>) -> 
     return result
 }
 
-public func *<T: FloatingPointArithmeticType>(lhs: Matrix<T>, rhs: Array<T>) -> Array<T> {
+public func *<T: FloatingPointArithmetic>(lhs: Matrix<T>, rhs: Array<T>) -> Array<T> {
     precondition(rhs.count == lhs.columns.count, "Matrix and Vector dimensions are not compatible")
     var result = Array<T>()
     for row in lhs.rows {
@@ -114,16 +115,14 @@ public func *<T: FloatingPointArithmeticType>(lhs: Matrix<T>, rhs: Array<T>) -> 
     return result
 }
 
-
-
-extension Matrix where Member: NumericArithmeticType {
+extension Matrix where Member: NumericArithmetic {
     public func dot(_ other: Matrix<Member>) -> Member {
         precondition(dimensions == other.dimensions, "Cannot take the dot product of matrices of different dimensions.")
         return zipWith(other, transform: *).reduce(0, +)
     }
 }
 
-extension Matrix where Member: SignedNumericArithmeticType {
+extension Matrix where Member: SignedNumericArithmetic {
     public var determinant: Member {
         precondition(isSquare, "Cannot find the determinant of a non-square matrix.")
         precondition(!isEmpty, "Cannot find the determinant of an empty matrix.")
@@ -158,11 +157,11 @@ extension Matrix where Member: SignedNumericArithmeticType {
     }
     
     public var adjoint: Matrix {
-        return cofactor.transpose
+        return cofactor.transposed
     }
 }
 
-extension Matrix where Member: FloatingPointArithmeticType {
+extension Matrix where Member: FloatingPointArithmetic {
     public var cholesky:Matrix {
         /* Ported from LAPACK Fortran Code http://www.netlib.org/lapack/double/dpotrf.f */
         precondition(!isEmpty, "Cannot find the cholesky of an empty matrix.")
@@ -199,20 +198,20 @@ extension Matrix where Member: FloatingPointArithmeticType {
     }
 }
 
-extension Matrix where Member: FloatingPointArithmeticType {
+extension Matrix where Member: FloatingPointArithmetic {
     public var inverse: Matrix {
         return adjoint * (1 / determinant)
     }
 }
 
-extension Matrix where Member: NumericArithmeticType {
+extension Matrix where Member: NumericArithmetic {
     public func transformVector(_ vector: [Member]) -> [Member] {
         return rows.map{ row in zip(row, vector).map(*).reduce(0, +) }
     }
 }
 
-public func *<T: NumericArithmeticType>(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> {
+public func *<T: NumericArithmetic>(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T> {
     precondition(lhs.columns.count == rhs.rows.count, "Incompatible dimensions for matrix multiplication.")
-    return Matrix(lhs.rows.map(rhs.transpose.transformVector))
+    return Matrix(lhs.rows.map(rhs.transposed.transformVector))
 }
 

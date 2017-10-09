@@ -48,7 +48,7 @@ class DimensionalTests: XCTestCase {
     
     func testTranspose() {
         let matrix: Matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-        XCTAssertTrue([[1, 4, 7], [2, 5, 8], [3, 6, 9]] == matrix.transpose)
+        XCTAssertTrue([[1, 4, 7], [2, 5, 8], [3, 6, 9]] == matrix.transposed)
     }
     
     func testRepeatedValue() {
@@ -97,12 +97,7 @@ class DimensionalTests: XCTestCase {
                                    [0,6,10,14],
                                    [0,0,11,15],
                                    [0,0,0,16]])
-        let testMatrix = test.transpose * test
+        let testMatrix = test.transposed * test
         XCTAssertTrue(test == testMatrix.cholesky)
-        
-        
-        
-
     }
-
 }

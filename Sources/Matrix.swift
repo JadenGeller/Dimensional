@@ -4,6 +4,7 @@
 //
 //  Created by Jaden Geller on 1/5/16.
 //  Copyright © 2016 Jaden Geller. All rights reserved.
+//  Modified by Vladislav Lisyanskiy on 9/10/2017. - Converted to Swift 4.
 //
 
 public struct Matrix<Member> {
@@ -30,11 +31,10 @@ extension Matrix: ExpressibleByArrayLiteral {
     public init(_ columns: ColumnView<Member>) {
         self.rowBacking = columns.matrix.rowBacking
     }
-    
 }
 
 extension Matrix {
-    public subscript(row: Int, column: Int) -> Member {
+    public subscript(_ row: Int, _ column: Int) -> Member {
         get {
             return rowBacking[row][column]
         }
@@ -129,20 +129,19 @@ extension Matrix {
         return rows.count == columns.count
     }
     
-    public var transpose: Matrix {
+    public var transposed: Matrix {
         return Matrix(RowView(columns))
     }
-    
 }
 
 extension Matrix where Member: Equatable {
     public var isSymmetric: Bool {
-        guard isSquare else { return false}
-        return transpose == self
-        
+        guard isSquare else { return false }
+        return transposed == self
     }
-
 }
+
+public typealias MatrixDimensions = (width: Int, height: Int)
 
 extension Matrix where Member: ExpressibleByIntegerLiteral {
     public static func diagonal(_ dimensions: MatrixDimensions, diagonalValue: Member, defaultValue: Member) -> Matrix {
@@ -155,10 +154,9 @@ extension Matrix where Member: ExpressibleByIntegerLiteral {
     
     public static func diagonalFromVector(_ vector: Array<Member>) -> Matrix {
         var matrix = Matrix(repeating: 0, dimensions: (vector.count, vector.count))
-        for i in 0..<vector.count {
-            matrix[i,i] = vector[i]
+        vector.enumerated().forEach { index, value in
+            matrix[index, index] = value
         }
-        
         return matrix
     }
     
@@ -170,8 +168,6 @@ extension Matrix where Member: ExpressibleByIntegerLiteral {
         return diagonal((size, size))
     }
 }
-
-public typealias MatrixDimensions = (width: Int, height: Int)
 
 extension Matrix {
     public init(repeating: Member, dimensions: MatrixDimensions) {

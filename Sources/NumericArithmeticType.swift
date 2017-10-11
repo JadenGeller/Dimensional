@@ -148,7 +148,7 @@ extension Matrix where Member: FloatingPointArithmeticType {
         /* Ported from LAPACK Fortran Code http://www.netlib.org/lapack/double/dpotrf.f */
         precondition(!isEmpty, "Cannot find the cholesky of an empty matrix.")
         precondition(self.isSquare, "Cannot find the cholesky of a non-square matrix.") //Matrix must be square
-        precondition(self.isSymmetric, "Cannot find the cholesky of a nonsymmetric matrix.")
+//        precondition(self.isSymmetric, "Cannot find the cholesky of a nonsymmetric matrix.")
         
         
         let n = rows.count

@@ -75,13 +75,13 @@
 			isa = PBXGroup;
 			children = (
 				4D59D5581C3C75A100058827 /* Matrix.swift */,
+				4D59D53F1C3C757D00058827 /* Products */,
 				4D8157BF1C3CCF3B00228F7B /* ColumnView.swift */,
 				4DB2D5791C3D3CA1005AA39B /* RowView.swift */,
 				4D8157C51C3D181A00228F7B /* NumericArithmeticType.swift */,
 				4D59D5401C3C757D00058827 /* Dimensional */,
 				4D59D54C1C3C757D00058827 /* DimensionalTests */,
 				6B4D54FB1E15F0E900BF47C3 /* Dimensional-iOS */,
-				4D59D53F1C3C757D00058827 /* Products */,
 			);
 			sourceTree = "<group>";
 		};

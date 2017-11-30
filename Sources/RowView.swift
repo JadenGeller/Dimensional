@@ -4,6 +4,7 @@
 //
 //  Created by Jaden Geller on 1/5/16.
 //  Copyright © 2016 Jaden Geller. All rights reserved.
+//  Modified by Vladislav Lisyanskiy on 9/10/2017. - Converted to Swift 4.
 //
 
 public struct RowView<Member> {
@@ -14,14 +15,14 @@ public struct RowView<Member> {
     }
 }
 
-extension RowView: ArrayLiteralConvertible {
+extension RowView: ExpressibleByArrayLiteral {
     public init() {
         self.matrix = Matrix()
     }
     
-    public init<S: SequenceType where S.Generator.Element == [Member]>(_ rows: S) {
+    public init<S: Sequence>(_ rows: S) where S.Iterator.Element == [Member] {
         self.init()
-        appendContentsOf(rows)
+        append(contentsOf: rows)
     }
     
     public init(arrayLiteral elements: [Member]...) {
@@ -39,13 +40,13 @@ extension RowView: CustomStringConvertible, CustomDebugStringConvertible {
     }
 }
 
-extension RowView: MutableCollectionType, RangeReplaceableCollectionType {
-    public mutating func replaceRange<C : CollectionType where C.Generator.Element == [Member]>(subRange: Range<Int>, with newElements: C) {
+extension RowView: MutableCollection, RangeReplaceableCollection {
+    public mutating func replaceSubrange<C : Collection>(_ subRange: Range<Int>, with newElements: C) where C.Iterator.Element == [Member] {
         let expectedCount = matrix.count > 0 ? matrix.columns.count : (newElements.first?.count ?? 0)
-        newElements.forEach{ row in
+        newElements.forEach { row in
             precondition(row.count == expectedCount, "Incompatable vector size.")
         }
-        matrix.rowBacking.replaceRange(subRange, with: newElements)
+        matrix.rowBacking.replaceSubrange(subRange, with: newElements)
     }
     
     public var startIndex: Int {
@@ -56,6 +57,10 @@ extension RowView: MutableCollectionType, RangeReplaceableCollectionType {
         return matrix.rowBacking.count
     }
     
+    public func index(after i: Int) -> Int {
+        return i + 1
+    }
+
     public subscript(index: Int) -> [Member] {
         get {
             return matrix.rowBacking[index]
@@ -66,4 +71,3 @@ extension RowView: MutableCollectionType, RangeReplaceableCollectionType {
         }
     }
 }
-

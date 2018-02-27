@@ -6,7 +6,7 @@ let myBoolMatrix: Matrix = [[true, false], [false, true]]
 let myStringMatrix: Matrix = [["hello", "hi", "howdy"], ["goodbye", "bye", "see ya"]]
 
 print(myBoolMatrix.map{ $0 ? 1 : 0 }) // -> [[1, 0], [0, 1]]
-print(myStringMatrix.transpose) // -> [["hello", "goodbye"], ["hi", "bye"], ["howdy", "see ya"]]
+print(myStringMatrix.transposed) // -> [["hello", "goodbye"], ["hi", "bye"], ["howdy", "see ya"]]
 ```
 Note that matrices can be initialized from 2-dimensional array literals, and that each inner-array represents a row in the constructed `Matrix`.
 
